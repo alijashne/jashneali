@@ -1,0 +1,48 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap");
+
+.footerBox {
+  background: var(
+    --Primary,
+    linear-gradient(89deg, #ff5d00 -15.42%, #ff9501 41.54%, #fe6a00 108.89%)
+  );
+  padding: 50px 0px;
+  overflow: hidden;
+  position: relative;
+}
+
+.footerLogoImg {
+  height: 44px;
+  width: 44px;
+}
+
+.socialIconBox {
+  border: 1px solid #fff;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  svg {
+    color: #fff;
+    font-size: 18px;
+  }
+}
+.footerSideImg {
+  position: absolute;
+  right: 0;
+  top: -80%;
+}
+.copyRightDiv {
+  background: #f4f4f4;
+}
+
+.headerMainBox {
+  background: var(
+    --Primary,
+    linear-gradient(89deg, #ff5d00 -15.42%, #ff9501 41.54%, #fe6a00 108.89%)
+  );
+}
+.searchIcon {
+  position: absolute;
+  top: 7px;
+  left: 5px;
+  font-size: 20px;
+}
