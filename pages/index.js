@@ -59,31 +59,59 @@ const projects = [
     category: "SaaS platform",
     description: "A focused management platform designed to make everyday operations easier to understand and run.",
     tags: ["Web app", "Dashboard", "React"],
-    className: "project-wide",
+    className: "",
     visual: "pi",
   },
   {
     title: "Rapicue",
-    category: "Mobile experience",
-    description: "A polished mobile-first product built around fast actions and clear user journeys.",
-    tags: ["Mobile", "React Native"],
+    category: "Healthcare · Emergency Services",
+    description: "An emergency healthcare platform connecting patients to hospitals, doctors and ambulances in real time.",
+    tags: ["Healthcare", "Patient Management", "Ambulance Booking", "React Native"],
     className: "",
     visual: "rapicue",
+    url: "https://www.rapicue.com",
+    images: ["/projects/rapicue/rapicue-home.webp", "/projects/rapicue/rapicue-about.webp"],
+    detail: "Rapicue is an emergency healthcare app built to get patients help faster. Patients can register and manage their own medical history, book an ambulance through a live token and queue system, discover nearby hospitals and clinics with real-time availability, run a guided self-assessment and book consultations with doctors — all from a single account.",
+    features: [
+      "Patient self-registration & self-managed medical history",
+      "Real-time ambulance token & queue booking",
+      "Nearby hospital & clinic discovery with live availability",
+      "Guided self-assessment & doctor consultation booking",
+      "Secure, patient-owned health records",
+    ],
+    role: "I worked as the end-to-end product partner on Rapicue — covering product architecture, UX flows, frontend and backend development, QA and production deployment, coordinated with my development team where needed.",
   },
   {
-    title: "Spiko",
-    category: "Digital product",
-    description: "A modern product experience with an expressive visual system and thoughtful interaction design.",
-    tags: ["UI/UX", "Frontend"],
+    title: "Shooting Pro Timer",
+    category: "Sports Tech · Shot Timer",
+    description: "A sound-detection shot timer for competitive shooters, built for iOS and Android with ISSF and IPSC training modes.",
+    tags: ["iOS", "Android", "React Native", "Sound Detection"],
     className: "",
-    visual: "spiko",
+    visual: "shootingtimer",
+    status: "Pre-launch · in testing",
+    images: [
+      "/projects/shooting-pro-timer/home.webp",
+      "/projects/shooting-pro-timer/issf-qualification.webp",
+      "/projects/shooting-pro-timer/ipsc-listening.webp",
+      "/projects/shooting-pro-timer/live-shot-detection.webp",
+    ],
+    detail: "Shooting Pro Timer is a shot timer app I'm building end-to-end for iOS and Android, aimed at competitive shooters training for ISSF and IPSC/IDPA events. It listens through the device microphone and detects each shot the instant it's fired, logging precise time and split — the same job a stand-alone electronic shot timer does, without the hardware. It runs the same command flow used in real competition, so practice sessions build the exact muscle memory and timing pressure of match day.",
+    features: [
+      "Real-time, sound-based shot detection — no external timer hardware needed",
+      "ISSF qualification timings: 25m Pistol, Rapid Fire Pistol, Standard Pistol",
+      "IPSC/IDPA practical modes: Comstock, Par Time, Virginia, hit-factor calculators",
+      "Quick workout-style drills (4s / 8s series) for reaction-speed training",
+      "Per-shot timing & split analytics, streaks and weekly training goals",
+      "Synced profile with favourites, equipment control and subscription tiers",
+    ],
+    role: "I'm building Shooting Pro Timer end-to-end — the sound-detection engine, the native iOS and Android app, the ISSF/IPSC training modes, and the analytics and account system behind it. Currently in closed testing ahead of launch.",
   },
   {
     title: "Inspection 360",
     category: "Operations platform",
     description: "A structured workflow for capturing information, collaborating and keeping work moving.",
     tags: ["Platform", "API", "Next.js"],
-    className: "project-wide project-last",
+    className: "",
     visual: "inspection",
   },
 ];
@@ -174,11 +202,57 @@ function ProjectVisual({ type }) {
   return (
     <div className={`project-visual visual-${type}`}>
       <div className="visual-window">
-        <div className="visual-bar"><i /><i /><i /><span>{type === "pi" ? "pi manager" : type === "inspection" ? "inspection 360" : type}</span></div>
+        <div className="visual-bar"><i /><i /><i /><span>{type === "pi" ? "pi manager" : type === "inspection" ? "inspection 360" : type === "rapicue" ? "rapicue.com" : type === "shootingtimer" ? "shooting pro timer" : type}</span></div>
         {type === "pi" && <><div className="visual-nav"><b>Overview</b><span>Activity</span><span>Reports</span><span>Settings</span></div><div className="visual-pi-grid"><div className="visual-stat">Monthly revenue<strong>$48,290</strong></div><div className="visual-stat">Active projects<strong>28 <small>↗ 18%</small></strong></div><div className="visual-bars"><i /><i /><i /><i /><i /><i /><i /></div></div></>}
-        {type === "rapicue" && <div className="phone-mock"><div className="phone-notch" /><small>GOOD MORNING, JASHNE</small><h4>Your day, in flow.</h4><div className="phone-pill">3 tasks completed <b>✓</b></div><div className="phone-card"><b>Design review</b><span>Today · 10:30 AM</span></div><div className="phone-card accent"><b>Build sprint</b><span>Today · 2:00 PM</span></div></div>}
-        {type === "spiko" && <div className="spiko-shape"><span>spiko</span><div className="spiko-orb" /><small>Make space for<br /><b>better ideas.</b></small></div>}
+        {type === "rapicue" && <div className="visual-screenshot"><img src="/projects/rapicue/rapicue-home.webp" alt="Rapicue emergency healthcare app home screen" loading="lazy" /></div>}
+        {type === "shootingtimer" && <div className="visual-screenshot visual-screenshot-phone"><img src="/projects/shooting-pro-timer/live-shot-detection.webp" alt="Shooting Pro Timer live shot-detection screen" loading="lazy" /></div>}
         {type === "inspection" && <><div className="inspection-heading"><small>INSPECTION OVERVIEW</small><h4>Field operations at a glance.</h4></div><div className="inspection-rows"><div><b>Westfield / Unit 04</b><span>In review <i /></span></div><div><b>Oak Avenue / Unit 12</b><span>Complete <i /></span></div><div><b>Park Lane / Unit 07</b><span>Scheduled <i /></span></div></div></>}
+      </div>
+    </div>
+  );
+}
+
+function ProjectModal({ project, onClose }) {
+  useEffect(() => {
+    if (!project) return;
+    document.body.style.overflow = "hidden";
+    const onKey = (event) => { if (event.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => { document.body.style.overflow = ""; window.removeEventListener("keydown", onKey); };
+  }, [project, onClose]);
+
+  if (!project) return null;
+
+  return (
+    <div className="project-modal-overlay" onClick={onClose}>
+      <div className="project-modal" onClick={(event) => event.stopPropagation()} role="dialog" aria-modal="true" aria-label={`${project.title} project details`}>
+        <button className="project-modal-close" onClick={onClose} aria-label="Close project details">✕</button>
+        {project.images ? (
+          <div className={`project-modal-gallery ${project.images.length > 2 ? "gallery-grid" : ""}`}>
+            {project.images.map((src) => <img key={src} src={src} alt={`${project.title} product screenshot`} loading="lazy" />)}
+          </div>
+        ) : (
+          <div className="project-modal-visual"><ProjectVisual type={project.visual} /></div>
+        )}
+        <div className="project-modal-body">
+          <span className="project-category">{project.category}</span>
+          <div className="project-modal-heading">
+            <h3>{project.title}</h3>
+            {project.url && <a className="button button-primary" href={project.url} target="_blank" rel="noreferrer">Visit live site <span>↗</span></a>}
+            {!project.url && project.status && <span className="project-status-pill">{project.status}</span>}
+          </div>
+          <p className="project-modal-detail">{project.detail || project.description}</p>
+          {project.features && (
+            <div className="project-modal-features">
+              <span className="section-kicker">What it does</span>
+              <ul>{project.features.map((feature) => <li key={feature}>{feature}</li>)}</ul>
+            </div>
+          )}
+          {project.role && (
+            <div className="project-modal-role"><span className="section-kicker">My role</span><p>{project.role}</p></div>
+          )}
+          <div className="tag-row">{project.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>
+        </div>
       </div>
     </div>
   );
@@ -190,6 +264,7 @@ export default function Home() {
   const [statsActive, setStatsActive] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
+  const [activeProject, setActiveProject] = useState(null);
   const visibleProjects = useMemo(() => projects, []);
 
   useEffect(() => {
@@ -271,7 +346,7 @@ export default function Home() {
 
           <section className="work-section section-pad" id="work">
             <Reveal className="section-heading heading-row"><div><span className="section-kicker">Selected work</span><h2>A few things I&apos;ve<br /><em>helped bring to life.</em></h2></div><p>Some of the products and applications I&apos;ve worked on across web, mobile and SaaS.</p></Reveal>
-            <div className="projects-grid">{visibleProjects.map((project, index) => <Reveal key={project.title} className={`project-card ${project.className}`}><ProjectVisual type={project.visual} /><div className="project-info"><div><span className="project-category">{project.category}</span><h3>{project.title}</h3><p>{project.description}</p><div className="tag-row">{project.tags.map((tag) => <span key={tag}>{tag}</span>)}</div></div><a href="#contact" aria-label={`Ask about ${project.title}`}>View project <b>↗</b></a></div></Reveal>)}</div>
+            <div className="projects-grid">{visibleProjects.map((project, index) => <Reveal key={project.title} className={`project-card ${project.className}`}><ProjectVisual type={project.visual} /><div className="project-info"><div><div className="project-meta-row"><span className="project-category">{project.category}</span>{!project.url && project.status && <span className="project-status-pill">{project.status}</span>}</div><h3>{project.title}</h3><p>{project.description}</p><div className="tag-row">{project.tags.map((tag) => <span key={tag}>{tag}</span>)}</div></div><a href="#work" onClick={(event) => { event.preventDefault(); setActiveProject(project); }} aria-label={`View ${project.title} project details`}>View project <b>↗</b></a></div></Reveal>)}</div>
           </section>
 
           <section className="lifecycle-section section-pad">
@@ -311,6 +386,7 @@ export default function Home() {
 
           <section className="final-cta section-pad"><Reveal><span className="section-kicker">The next chapter</span><h2>Let&apos;s turn your idea<br />into a <em>product.</em></h2><p>From a first concept to a production-ready application, I can help coordinate the complete development journey.</p><div className="hero-actions"><a className="button button-light" href="#contact">Start a conversation <span>↗</span></a><a className="button button-outline-light" href="#work">View my work <span>↓</span></a></div></Reveal></section>
         </main>
+        <ProjectModal project={activeProject} onClose={() => setActiveProject(null)} />
         <footer className="site-footer section-pad"><div className="footer-main"><a className="brand" href="#home"><span>J</span><div><strong>Jashne Ali</strong><small>Software Developer</small></div></a><p>Software Developer <i>•</i> Product Development <i>•</i> Web & Mobile</p><div className="footer-links"><a href="#home">Home</a><a href="#services">Services</a><a href="#work">Work</a><a href="#process">Process</a><a href="#testimonials">Testimonials</a><a href="#contact">Contact</a></div></div><div className="footer-bottom"><span>© 2026 Jashne Ali. All rights reserved.</span><div><a href={contactConfig.upwork.startsWith("http") ? contactConfig.upwork : "#contact"}>Upwork</a><a href={contactConfig.linkedin.startsWith("http") ? contactConfig.linkedin : "#contact"}>LinkedIn</a><a href={contactConfig.github.startsWith("http") ? contactConfig.github : "#contact"}>GitHub</a><a href="#contact">Email</a></div><span>Designed with intention.</span></div></footer>
       </div>
     </>
