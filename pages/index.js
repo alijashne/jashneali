@@ -266,6 +266,7 @@ export default function Home() {
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
   const [activeProject, setActiveProject] = useState(null);
   const visibleProjects = useMemo(() => projects, []);
+  const currentYear = useMemo(() => new Date().getFullYear(), []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -387,7 +388,7 @@ export default function Home() {
           <section className="final-cta section-pad"><Reveal><span className="section-kicker">The next chapter</span><h2>Let&apos;s turn your idea<br />into a <em>product.</em></h2><p>From a first concept to a production-ready application, I can help coordinate the complete development journey.</p><div className="hero-actions"><a className="button button-light" href="#contact">Start a conversation <span>↗</span></a><a className="button button-outline-light" href="#work">View my work <span>↓</span></a></div></Reveal></section>
         </main>
         <ProjectModal project={activeProject} onClose={() => setActiveProject(null)} />
-        <footer className="site-footer section-pad"><div className="footer-main"><a className="brand" href="#home"><span>J</span><div><strong>Jashne Ali</strong><small>Software Developer</small></div></a><p>Software Developer <i>•</i> Product Development <i>•</i> Web & Mobile</p><div className="footer-links"><a href="#home">Home</a><a href="#services">Services</a><a href="#work">Work</a><a href="#process">Process</a><a href="#testimonials">Testimonials</a><a href="#contact">Contact</a></div></div><div className="footer-bottom"><span>© 2026 Jashne Ali. All rights reserved.</span><div><a href={contactConfig.upwork.startsWith("http") ? contactConfig.upwork : "#contact"}>Upwork</a><a href={contactConfig.linkedin.startsWith("http") ? contactConfig.linkedin : "#contact"}>LinkedIn</a><a href={contactConfig.github.startsWith("http") ? contactConfig.github : "#contact"}>GitHub</a><a href="#contact">Email</a></div><span>Designed with intention.</span></div></footer>
+        <footer className="site-footer section-pad"><div className="footer-main"><a className="brand" href="#home"><span>J</span><div><strong>Jashne Ali</strong><small>Software Developer</small></div></a><p>Software Developer <i>•</i> Product Development <i>•</i> Web & Mobile</p><div className="footer-links"><a href="#home">Home</a><a href="#services">Services</a><a href="#work">Work</a><a href="#process">Process</a><a href="#testimonials">Testimonials</a><a href="#contact">Contact</a></div></div><div className="footer-bottom"><span>© {currentYear} Jashne Ali. All rights reserved.</span><div><a href={contactConfig.upwork.startsWith("http") ? contactConfig.upwork : "#contact"}>Upwork</a><a href={contactConfig.linkedin.startsWith("http") ? contactConfig.linkedin : "#contact"}>LinkedIn</a><a href={contactConfig.github.startsWith("http") ? contactConfig.github : "#contact"}>GitHub</a><a href="#contact">Email</a></div><span>Designed with intention.</span></div></footer>
       </div>
     </>
   );
