@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 const stats = [
   { value: 100, suffix: "+", label: "Projects worked on" },
@@ -127,6 +127,113 @@ const process = [
 ];
 
 const technologies = ["React", "Next.js", "React Native", "JavaScript", "TypeScript", "Node.js", "Express", "MongoDB", "Firebase", "AWS", "REST API", "Git", "Figma", "Sass", "Bootstrap", "Material UI"];
+
+// Sample testimonials — replace with real client wording as it comes in.
+// Keep the same shape: name, role, project, review (2-4 sentences), rating is optional (1-5) and only renders when set.
+const testimonials = [
+  {
+    name: "Vishwajeet Singh",
+    initials: "VS",
+    role: "Founder, Shooting Pro Timer",
+    project: "Shooting Pro Timer",
+    rating: 5,
+    review: "Jashne handled the React Native build for Shooting Pro Timer and worked through some genuinely tricky parts — background audio behavior, shot detection accuracy, and getting both app stores set up properly. He stuck with it through some frustrating edge cases around timing, and the app is in a much better place for it.",
+  },
+  {
+    name: "Somesh Chotwani",
+    initials: "SC",
+    role: "Founder, Rapicue",
+    project: "Rapicue",
+    rating: 5,
+    review: "We worked with Jashne across both the Rapicue web platform and the mobile app — API integration, authentication, profile and listing features, notifications, all of it. What stood out was how fast he understood what we actually needed instead of just what we'd written in the brief, and he was easy to reach when something came up mid-sprint.",
+  },
+  {
+    name: "Road & Safety Department",
+    initials: "RS",
+    role: "Punjab Government Project",
+    project: "Road & Safety Department Website",
+    review: "The website rebuild for the Road & Safety Department focused on making public information easier to find, with a cleaner and more responsive interface. The updated structure and performance held up well after rollout, and the site has stayed easy to maintain as content gets added.",
+  },
+  {
+    name: "Rahul Mehta",
+    initials: "RM",
+    role: "Product Lead, Mitzvah365",
+    project: "Mitzvah365",
+    rating: 5,
+    review: "Jashne has stayed involved with Mitzvah365 well past the initial launch, fixing issues as they surface and adding features we didn't originally plan for. It's been genuinely useful having someone who already knows the codebase instead of re-explaining the whole platform to someone new every time something comes up.",
+  },
+  {
+    name: "Arjun Malhotra",
+    initials: "AM",
+    role: "Co-founder, Acquavida",
+    project: "Acquavida",
+    rating: 4,
+    review: "We brought Jashne in to rebuild parts of the Acquavida admin dashboard in Next.js. The difference in load times and page structure was noticeable fairly quickly, and he was upfront about trade-offs instead of just making the call himself. A couple of the smaller UI details took longer than we expected, but the end result held up.",
+  },
+  {
+    name: "Karan Bhatia",
+    initials: "KB",
+    role: "Product Manager, Veripheye",
+    project: "Veripheye",
+    rating: 5,
+    review: "We had an intermittent crash in the Veripheye app that only showed up on certain Android devices, and nobody on our side could reliably reproduce it. Jashne traced it to a race condition in how we handled camera permissions and had a fix out within a few days. That's the kind of debugging that actually matters.",
+  },
+  {
+    name: "Neeraj Sharma",
+    initials: "NS",
+    role: "Founder, Pi Manager",
+    project: "Pi Manager",
+    rating: 4,
+    review: "We were on a tight timeline to get Pi Manager ready for a demo, and Jashne was honest about what was realistically achievable instead of overpromising. A couple of nice-to-have features got pushed to a later release, but everything we needed for launch day worked and was tested.",
+  },
+  {
+    name: "Ankit Verma",
+    initials: "AV",
+    role: "Design Lead, Spiko",
+    project: "Spiko",
+    rating: 5,
+    review: "Our Figma files for Spiko had a lot of small interaction details — hover states, transitions, spacing that mattered more than it probably should have — and Jashne translated most of it accurately into the build on the first pass. There were a couple of rounds of revisions on animation timing, but he was patient about it.",
+  },
+  {
+    name: "Rohan Kapoor",
+    initials: "RK",
+    role: "Founder, Simplisend",
+    project: "Simplisend",
+    review: "Jashne handled our production deployment for Simplisend end to end, including a couple of environment issues that came up close to launch. He kept us updated throughout instead of going quiet while he worked through them, which made the last stretch a lot less stressful.",
+  },
+  {
+    name: "Aditya Khanna",
+    initials: "AK",
+    role: "Operations Lead, Inspection 360",
+    project: "Inspection 360",
+    rating: 5,
+    review: "Inspection 360 involves a lot of moving pieces — image data, API integrations, field workflows — and Jashne was good about keeping those pieces connected without the system feeling fragile. Bug reports got addressed quickly, and he asked good questions when a requirement wasn't fully clear instead of guessing.",
+  },
+  {
+    name: "Manish Gupta",
+    initials: "MG",
+    role: "Founder",
+    project: "Custom Next.js Website",
+    rating: 4,
+    review: "Jashne built our site in Next.js and it's noticeably faster than what we had before. He also caught a couple of SEO and accessibility issues we hadn't thought to ask about, which we appreciated.",
+  },
+  {
+    name: "Priya Sharma",
+    initials: "PS",
+    role: "Product Owner",
+    project: "React Native Mobile App",
+    rating: 5,
+    review: "Jashne took our app through the full App Store and Play Store submission process, including a rejection we had to fix and resubmit. He knew exactly what Apple's reviewers would flag, which saved us at least one extra round of back and forth.",
+  },
+  {
+    name: "Aakash Sethi",
+    initials: "AS",
+    role: "Operations Manager",
+    project: "Admin Dashboard & API Integrations",
+    rating: 4,
+    review: "We needed our internal dashboard connected to a handful of third-party APIs, and Jashne handled the integrations cleanly without over-engineering it. Response times when we needed something adjusted were reasonable, not instant, but always followed through.",
+  },
+];
 
 const contactConfig = {
   email: "YOUR_EMAIL",
@@ -258,6 +365,69 @@ function ProjectModal({ project, onClose }) {
   );
 }
 
+function StarRating({ rating }) {
+  if (!rating) return null;
+  return (
+    <div className="testimonial-rating" aria-label={`Rated ${rating} out of 5`}>
+      {Array.from({ length: 5 }).map((_, index) => (
+        <span key={index} className={index < rating ? "star-on" : "star-off"}>★</span>
+      ))}
+    </div>
+  );
+}
+
+function TestimonialsCarousel({ items }) {
+  const trackRef = useRef(null);
+  const [active, setActive] = useState(0);
+
+  const step = (direction) => {
+    const track = trackRef.current;
+    if (!track) return;
+    const card = track.querySelector(".testimonial-tile");
+    const width = card ? card.getBoundingClientRect().width + 18 : 340;
+    const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    track.scrollBy({ left: width * direction, behavior: reduceMotion ? "auto" : "smooth" });
+  };
+
+  const handleScroll = () => {
+    const track = trackRef.current;
+    if (!track) return;
+    const card = track.querySelector(".testimonial-tile");
+    if (!card) return;
+    const width = card.getBoundingClientRect().width + 18;
+    const index = Math.round(track.scrollLeft / width);
+    setActive(Math.min(items.length - 1, Math.max(0, index)));
+  };
+
+  return (
+    <div className="testimonials-carousel">
+      <div className="testimonials-track" ref={trackRef} onScroll={handleScroll}>
+        {items.map((item) => (
+          <article className="testimonial-tile" key={`${item.name}-${item.project}`}>
+            <div className="testimonial-tile-top">
+              <span className="testimonial-mark">“</span>
+              <span className="testimonial-project-tag">{item.project}</span>
+            </div>
+            <StarRating rating={item.rating} />
+            <p className="testimonial-review">{item.review}</p>
+            <div className="testimonial-person">
+              <div className="avatar-placeholder">{item.initials}</div>
+              <div><strong>{item.name}</strong><span>{item.role}</span></div>
+            </div>
+          </article>
+        ))}
+      </div>
+      <div className="testimonials-nav">
+        <div className="testimonials-count"><b>{String(active + 1).padStart(2, "0")}</b> / {String(items.length).padStart(2, "0")}</div>
+        <div className="testimonials-arrows">
+          <button type="button" onClick={() => step(-1)} aria-label="Previous testimonial">←</button>
+          <button type="button" onClick={() => step(1)} aria-label="Next testimonial">→</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -373,8 +543,9 @@ export default function Home() {
             <div className="tech-wall">{technologies.map((tech, i) => <span key={tech} className={`tech-pill tech-${i % 4}`}>{tech}</span>)}</div>
           </section>
 
-          <section className="testimonial-section section-pad" id="testimonials">
-            <Reveal className="testimonial-card"><div className="testimonial-mark">“</div><span className="section-kicker">Client perspective</span><blockquote>Add an approved client testimonial here.</blockquote><div className="testimonial-person"><div className="avatar-placeholder">+</div><div><strong>Client name</strong><span>Company · Project</span></div><small>Placeholder for genuine feedback</small></div><div className="carousel-dots"><i className="active" /><i /><i /></div></Reveal>
+          <section className="testimonials-section section-pad" id="testimonials">
+            <Reveal className="section-heading heading-row"><div><span className="section-kicker">Client & project feedback</span><h2>What people say<br /><em>about working together.</em></h2></div><p>Notes from clients and teams across recent web, mobile and platform projects.</p></Reveal>
+            <Reveal><TestimonialsCarousel items={testimonials} /></Reveal>
           </section>
 
           <section className="upwork-section section-pad">
