@@ -473,6 +473,10 @@ export default function Home() {
         <meta property="og:title" content="Jashne Ali — Software Developer & Product Development Partner" />
         <meta property="og:description" content="One accountable developer for your complete product development journey." />
         <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="Jashne Ali — Software Developer & Product Development Partner" />
+        <meta name="twitter:description" content="One accountable developer for your complete product development journey." />
+        <meta name="theme-color" content="#fbfaf8" />
       </Head>
       <div className="site-shell" onMouseMove={handleMouseMove}>
         <header className={`site-nav ${scrolled ? "nav-scrolled" : ""}`}>
