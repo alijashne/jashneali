@@ -358,10 +358,10 @@ function ProjectModal({ project, onClose }) {
 
   return (
     <div className="project-modal-overlay" onClick={onClose}>
-      <div className="project-modal" onClick={(event) => event.stopPropagation()} role="dialog" aria-modal="true" aria-label={`${project.title} project details`}>
+      <div className="project-modal" key={project.title} onClick={(event) => event.stopPropagation()} role="dialog" aria-modal="true" aria-label={`${project.title} project details`}>
         <button className="project-modal-close" onClick={onClose} aria-label="Close project details">✕</button>
         {project.images ? (
-          <div className={`project-modal-gallery ${project.images.length > 2 ? "gallery-grid" : ""}`}>
+          <div className={`project-modal-gallery ${project.images.length > 1 ? "gallery-grid" : ""}`}>
             {project.images.map((src) => <img key={src} src={src} alt={`${project.title} product screenshot`} loading="lazy" />)}
           </div>
         ) : (
