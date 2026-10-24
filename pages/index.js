@@ -107,12 +107,22 @@ const projects = [
     role: "I'm building Shooting Pro Timer end-to-end — the sound-detection engine, the native iOS and Android app, the ISSF/IPSC training modes, and the analytics and account system behind it. Currently in closed testing ahead of launch.",
   },
   {
-    title: "Inspection 360",
-    category: "Operations platform",
-    description: "A structured workflow for capturing information, collaborating and keeping work moving.",
-    tags: ["Platform", "API", "Next.js"],
+    title: "Dayas",
+    category: "Social · Voice Dating",
+    description: "A voice-only dating app where people connect through conversation, not text.",
+    tags: ["Android", "Social", "Voice-only"],
     className: "",
-    visual: "inspection",
+    visual: "dayas",
+    url: "https://play.google.com/store/apps/details?id=com.dayas&hl=en_IN",
+    ctaLabel: "Get it on Google Play",
+    images: ["/projects/dayas/dayas1.webp", "/projects/dayas/dayas2.webp"],
+    detail: "Dayas is a voice-only dating app built for people who prefer speaking over typing. All communication happens through voice rather than text, helping people connect more naturally through tone and presence. Access starts with an application-based onboarding process, with profiles reviewed and identity verified to keep the community respectful and trustworthy.",
+    features: [
+      "Voice-only communication — no text messaging",
+      "Application-based onboarding with profile review",
+      "Identity verification for authenticity & safety",
+      "Curated, respectful community",
+    ],
   },
 ];
 
@@ -200,14 +210,6 @@ const testimonials = [
     role: "Founder, Simplisend",
     project: "Simplisend",
     review: "Jashne handled our production deployment for Simplisend end to end, including a couple of environment issues that came up close to launch. He kept us updated throughout instead of going quiet while he worked through them, which made the last stretch a lot less stressful.",
-  },
-  {
-    name: "Aditya Khanna",
-    initials: "AK",
-    role: "Operations Lead, Inspection 360",
-    project: "Inspection 360",
-    rating: 5,
-    review: "Inspection 360 involves a lot of moving pieces — image data, API integrations, field workflows — and Jashne was good about keeping those pieces connected without the system feeling fragile. Bug reports got addressed quickly, and he asked good questions when a requirement wasn't fully clear instead of guessing.",
   },
   {
     name: "Manish Gupta",
@@ -305,15 +307,31 @@ function ProductVisual() {
   );
 }
 
-function ProjectVisual({ type }) {
+function CyclingScreens({ images }) {
+  const [active, setActive] = useState(0);
+  useEffect(() => {
+    if (!images || images.length < 2) return;
+    const id = setInterval(() => setActive((current) => (current + 1) % images.length), 2200);
+    return () => clearInterval(id);
+  }, [images]);
+  return (
+    <div className="visual-screenshot visual-cycle">
+      {images.map((src, index) => (
+        <img key={src} src={src} alt="Dayas app preview screen" loading="lazy" className={index === active ? "is-active" : ""} />
+      ))}
+    </div>
+  );
+}
+
+function ProjectVisual({ type, images }) {
   return (
     <div className={`project-visual visual-${type}`}>
       <div className="visual-window">
-        <div className="visual-bar"><i /><i /><i /><span>{type === "pi" ? "pi manager" : type === "inspection" ? "inspection 360" : type === "rapicue" ? "rapicue.com" : type === "shootingtimer" ? "shooting pro timer" : type}</span></div>
+        <div className="visual-bar"><i /><i /><i /><span>{type === "pi" ? "pi manager" : type === "dayas" ? "dayas" : type === "rapicue" ? "rapicue.com" : type === "shootingtimer" ? "shooting pro timer" : type}</span></div>
         {type === "pi" && <><div className="visual-nav"><b>Overview</b><span>Activity</span><span>Reports</span><span>Settings</span></div><div className="visual-pi-grid"><div className="visual-stat">Monthly revenue<strong>$48,290</strong></div><div className="visual-stat">Active projects<strong>28 <small>↗ 18%</small></strong></div><div className="visual-bars"><i /><i /><i /><i /><i /><i /><i /></div></div></>}
         {type === "rapicue" && <div className="visual-screenshot"><img src="/projects/rapicue/rapicue-home.webp" alt="Rapicue emergency healthcare app home screen" loading="lazy" /></div>}
         {type === "shootingtimer" && <div className="visual-screenshot visual-screenshot-phone"><img src="/projects/shooting-pro-timer/live-shot-detection.webp" alt="Shooting Pro Timer live shot-detection screen" loading="lazy" /></div>}
-        {type === "inspection" && <><div className="inspection-heading"><small>INSPECTION OVERVIEW</small><h4>Field operations at a glance.</h4></div><div className="inspection-rows"><div><b>Westfield / Unit 04</b><span>In review <i /></span></div><div><b>Oak Avenue / Unit 12</b><span>Complete <i /></span></div><div><b>Park Lane / Unit 07</b><span>Scheduled <i /></span></div></div></>}
+        {type === "dayas" && <CyclingScreens images={images} />}
       </div>
     </div>
   );
@@ -345,7 +363,7 @@ function ProjectModal({ project, onClose }) {
           <span className="project-category">{project.category}</span>
           <div className="project-modal-heading">
             <h3>{project.title}</h3>
-            {project.url && <a className="button button-primary" href={project.url} target="_blank" rel="noreferrer">Visit live site <span>↗</span></a>}
+            {project.url && <a className="button button-primary" href={project.url} target="_blank" rel="noreferrer">{project.ctaLabel || "Visit live site"} <span>↗</span></a>}
             {!project.url && project.status && <span className="project-status-pill">{project.status}</span>}
           </div>
           <p className="project-modal-detail">{project.detail || project.description}</p>
@@ -522,7 +540,7 @@ export default function Home() {
 
           <section className="work-section section-pad" id="work">
             <Reveal className="section-heading heading-row"><div><span className="section-kicker">Selected work</span><h2>A few things I&apos;ve<br /><em>helped bring to life.</em></h2></div><p>Some of the products and applications I&apos;ve worked on across web, mobile and SaaS.</p></Reveal>
-            <div className="projects-grid">{visibleProjects.map((project, index) => <Reveal key={project.title} className={`project-card ${project.className}`}><ProjectVisual type={project.visual} /><div className="project-info"><div><div className="project-meta-row"><span className="project-category">{project.category}</span>{!project.url && project.status && <span className="project-status-pill">{project.status}</span>}</div><h3>{project.title}</h3><p>{project.description}</p><div className="tag-row">{project.tags.map((tag) => <span key={tag}>{tag}</span>)}</div></div><a href="#work" onClick={(event) => { event.preventDefault(); setActiveProject(project); }} aria-label={`View ${project.title} project details`}>View project <b>↗</b></a></div></Reveal>)}</div>
+            <div className="projects-grid">{visibleProjects.map((project, index) => <Reveal key={project.title} className={`project-card ${project.className}`}><ProjectVisual type={project.visual} images={project.images} /><div className="project-info"><div><div className="project-meta-row"><span className="project-category">{project.category}</span>{!project.url && project.status && <span className="project-status-pill">{project.status}</span>}</div><h3>{project.title}</h3><p>{project.description}</p><div className="tag-row">{project.tags.map((tag) => <span key={tag}>{tag}</span>)}</div></div><a href="#work" onClick={(event) => { event.preventDefault(); setActiveProject(project); }} aria-label={`View ${project.title} project details`}>View project <b>↗</b></a></div></Reveal>)}</div>
           </section>
 
           <section className="lifecycle-section section-pad">
