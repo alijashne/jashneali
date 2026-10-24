@@ -62,6 +62,8 @@ Thumbs.db
 *.mov
 *.wmv
 *.env
+.env.local
+.env*.local
 
 package-lock.json
 yarn.lock

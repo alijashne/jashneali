@@ -238,10 +238,10 @@ const testimonials = [
   {
     name: "Michelle Contreras",
     initials: "MC",
-    role: "Founder, Hiro",
-    project: "Hiro (HireInt)",
+    role: "Founder, HireInt",
+    project: "HireInt",
     rating: 5,
-    review: "Jashne led Hiro end to end, from the visa-based onboarding and sponsor-verified job feed down to the application tracker and profile screens. International students on this app need to trust that every single listing actually sponsors a visa, and he built the whole experience around getting that right instead of just shipping features. Having one person own the project from the first screen through to production made the whole build a lot less stressful to manage.",
+    review: "Jashne led HireInt end to end, from the visa-based onboarding and sponsor-verified job feed down to the application tracker and profile screens. International students on this app need to trust that every single listing actually sponsors a visa, and he built the whole experience around getting that right instead of just shipping features. Having one person own the project from the first screen through to production made the whole build a lot less stressful to manage.",
   },
 ];
 
@@ -459,6 +459,8 @@ export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [statsActive, setStatsActive] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
   const [activeProject, setActiveProject] = useState(null);
   const visibleProjects = useMemo(() => projects, []);
@@ -484,6 +486,34 @@ export default function Home() {
     const x = (event.clientX / window.innerWidth - 0.5) * 2;
     const y = (event.clientY / window.innerHeight - 0.5) * 2;
     setMouse({ x, y });
+  };
+
+  const handleContactSubmit = async (event) => {
+    event.preventDefault();
+    const form = event.target;
+    const data = new FormData(form);
+    setSubmitError("");
+    setSubmitting(true);
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: data.get("name"),
+          email: data.get("email"),
+          type: data.get("type"),
+          budget: data.get("budget"),
+          message: data.get("message"),
+        }),
+      });
+      if (!response.ok) throw new Error("Request failed");
+      setSubmitted(true);
+      form.reset();
+    } catch (error) {
+      setSubmitError("Something went wrong — please email me directly instead.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const scrollTo = (id) => {
@@ -584,7 +614,7 @@ export default function Home() {
           </section>
 
           <section className="contact-section section-pad" id="contact">
-            <Reveal className="contact-grid"><div className="contact-copy"><span className="section-kicker">Start a conversation</span><h2>Have a project<br /><em>in mind?</em></h2><p>Tell me what you&apos;re building and I&apos;ll get back to you with the next steps.</p><div className="contact-details"><a href={contactConfig.email.startsWith("YOUR") ? "#contact-form" : `mailto:${contactConfig.email}`}>Email me <span>↗</span></a><a href="#home">Back to top <span>↑</span></a></div></div><form id="contact-form" className="inquiry-form" onSubmit={(event) => { event.preventDefault(); setSubmitted(true); }}><div className="form-row"><label>Name<input required name="name" placeholder="Your name" /></label><label>Email<input required type="email" name="email" placeholder="you@company.com" /></label></div><div className="form-row"><label>Project type<select name="type" defaultValue=""><option value="" disabled>Select one</option><option>Web application</option><option>Mobile application</option><option>Backend & API</option><option>Something else</option></select></label><label>Budget<select name="budget" defaultValue=""><option value="" disabled>Choose a range</option><option>$1k – $5k</option><option>$5k – $15k</option><option>$15k+</option></select></label></div><label>Tell me about it<textarea required name="message" rows="4" placeholder="What are you looking to build?" /></label><button className="button button-primary" type="submit">{submitted ? "Thanks — I'll be in touch" : "Let's discuss your project"} <span>↗</span></button><small className="form-note">No database, no fuss. This form is frontend-only and ready to connect to your preferred inbox.</small></form></Reveal>
+            <Reveal className="contact-grid"><div className="contact-copy"><span className="section-kicker">Start a conversation</span><h2>Have a project<br /><em>in mind?</em></h2><p>Tell me what you&apos;re building and I&apos;ll get back to you with the next steps.</p><div className="contact-details"><a href={contactConfig.email.startsWith("YOUR") ? "#contact-form" : `mailto:${contactConfig.email}`}>Email me <span>↗</span></a><a href="#home">Back to top <span>↑</span></a></div></div><form id="contact-form" className="inquiry-form" onSubmit={handleContactSubmit}><div className="form-row"><label>Name<input required name="name" placeholder="Your name" /></label><label>Email<input required type="email" name="email" placeholder="you@company.com" /></label></div><div className="form-row"><label>Project type<select name="type" defaultValue=""><option value="" disabled>Select one</option><option>Web application</option><option>Mobile application</option><option>Backend & API</option><option>Something else</option></select></label><label>Budget<select name="budget" defaultValue=""><option value="" disabled>Choose a range</option><option>$1k – $5k</option><option>$5k – $15k</option><option>$15k+</option></select></label></div><label>Tell me about it<textarea required name="message" rows="4" placeholder="What are you looking to build?" /></label><button className="button button-primary" type="submit" disabled={submitting}>{submitted ? "Thanks — I'll be in touch" : submitting ? "Sending…" : "Let's discuss your project"} <span>↗</span></button>{submitError ? <small className="form-note form-error">{submitError}</small> : <small className="form-note">Your message is sent straight to my inbox — I'll get back to you directly.</small>}</form></Reveal>
           </section>
 
           <section className="final-cta section-pad"><Reveal><span className="section-kicker">The next chapter</span><h2>Let&apos;s turn your idea<br />into a <em>product.</em></h2><p>From a first concept to a production-ready application, I can help coordinate the complete development journey.</p><div className="hero-actions"><a className="button button-light" href="#contact">Start a conversation <span>↗</span></a><a className="button button-outline-light" href="#work">View my work <span>↓</span></a></div></Reveal></section>
