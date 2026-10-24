@@ -235,6 +235,14 @@ const testimonials = [
     rating: 4,
     review: "We needed our internal dashboard connected to a handful of third-party APIs, and Jashne handled the integrations cleanly without over-engineering it. Response times when we needed something adjusted were reasonable, not instant, but always followed through.",
   },
+  {
+    name: "Michelle Contreras",
+    initials: "MC",
+    role: "Founder, Hiro",
+    project: "Hiro (HireInt)",
+    rating: 5,
+    review: "Jashne led Hiro end to end, from the visa-based onboarding and sponsor-verified job feed down to the application tracker and profile screens. International students on this app need to trust that every single listing actually sponsors a visa, and he built the whole experience around getting that right instead of just shipping features. Having one person own the project from the first screen through to production made the whole build a lot less stressful to manage.",
+  },
 ];
 
 const contactConfig = {
